@@ -1,0 +1,386 @@
+{
+  "cookies": [
+    {
+      "name": "name",
+      "value": "value",
+      "domain": "accesstrade.co.id",
+      "path": "/publisher",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "PHPSESSID",
+      "value": "043622268982c78a14f465c361ba3081",
+      "domain": "accesstrade.co.id",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "CLID",
+      "value": "b81799ee557f4d3db745b0df33ccf040.20250819.20260819",
+      "domain": "www.clarity.ms",
+      "path": "/",
+      "expires": 1787109148.829261,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_ttp",
+      "value": "31UKKcPNTZJkGxVUJhwJPNJCnl0",
+      "domain": ".tiktok.com",
+      "path": "/",
+      "expires": 1789269149.014109,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.3.527092736.1755573149",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1755659549,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gat_UA-47409644-1",
+      "value": "1",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1755573209,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_fbp",
+      "value": "fb.2.1755573149181.924241797585857508",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1763349149,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_clck",
+      "value": "441nuw%7C2%7Cfyl%7C0%7C2057",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1787109149,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_gcl_au",
+      "value": "1.1.1266145994.1755573149.1278405505.1755573149.1755573149",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1763349149,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "IDE",
+      "value": "AHWqTUmOP5XeiQcZPXD3Uax-CVHFUxtC4okBbvIVlSOS-AvLhrTiwa9uq68Rf33o",
+      "domain": ".doubleclick.net",
+      "path": "/",
+      "expires": 1790133149.39888,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "_tt_enable_cookie",
+      "value": "1",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1789269149,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ttp",
+      "value": "01K3050QRQEKC85QFHE51V4QNS_.tt.2",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1789269149,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ttcsid",
+      "value": "1755573149469::09e_NMi8hXxhYsjr_uQn.1.1755573149469",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1789269149,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dev_site",
+      "value": "UEhsMGZSdk83NmU0RUNFdVZpSHYrdz09",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1758165149.623706,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "u_key",
+      "value": "c3BHTXZvZllCZVlIcy9KSW1URWh0aTMxaGlMVE0ybzVWUHFodHlObHh0QVdBdmJmRWtuY3dwb1RMSnRieFQ0L3VPTTEwYzh1MnA2WEpqSmtwUmxlL2RzeThrVnZJNndqbzBHak44cmZGTTg9",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1758165149.623792,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ttcsid_CNN0K9BC77UDD0LHVUQ0",
+      "value": "1755573149468::OcZKU0NsCPbc4lyoVJiR.1.1755573149720",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1789269149,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "MUID",
+      "value": "09F8AF9852A66B5D1883B9D553E36A63",
+      "domain": ".bing.com",
+      "path": "/",
+      "expires": 1789269149.879213,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "MR",
+      "value": "0",
+      "domain": ".c.bing.com",
+      "path": "/",
+      "expires": 1756177949.879289,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SRM_B",
+      "value": "09F8AF9852A66B5D1883B9D553E36A63",
+      "domain": ".c.bing.com",
+      "path": "/",
+      "expires": 1789269149.87931,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "SM",
+      "value": "C",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "MUID",
+      "value": "09F8AF9852A66B5D1883B9D553E36A63",
+      "domain": ".clarity.ms",
+      "path": "/",
+      "expires": 1789269149.966621,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "MR",
+      "value": "0",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": 1756177949.966653,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ANONCHK",
+      "value": "0",
+      "domain": ".c.clarity.ms",
+      "path": "/",
+      "expires": 1755573749.966669,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "PHPSESSID",
+      "value": "913447d8cc8aaf506b95c6fa96a8c623",
+      "domain": "db.accesstrade.co.id",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dev_site_live",
+      "value": "UEhsMGZSdk83NmU0RUNFdVZpSHYrdz09",
+      "domain": ".db.accesstrade.co.id",
+      "path": "/",
+      "expires": 1758165150.471204,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "u_key",
+      "value": "c3BHTXZvZllCZVlIcy9KSW1URWh0aTMxaGlMVE0ybzVWUHFodHlObHh0QVdBdmJmRWtuY3dwb1RMSnRieFQ0L3VPTTEwYzh1MnA2WEpqSmtwUmxlL2RzeThrVnZJNndqbzBHak44cmZGTTg9",
+      "domain": ".db.accesstrade.co.id",
+      "path": "/",
+      "expires": 1758165150.471264,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "d_pub",
+      "value": "dExpWjhFcHVsYUhwMnIzWmYyVVV3OW1weExUNUJVVTZIZGdmaDhQa081OUZwVUdmaUNNN2pnWEpoU0pYcHR1Tg%3D%3D",
+      "domain": ".db.accesstrade.co.id",
+      "path": "/",
+      "expires": 1758165150.471293,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "name",
+      "value": "value",
+      "domain": "db.accesstrade.co.id",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_ZNBWJ3EYXG",
+      "value": "GS2.1.s1755573148$o1$g0$t1755573150$j58$l0$h0",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1790133150.781632,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.1.1330946638.1755573149",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1790133151.506085,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_clsk",
+      "value": "1yekti%7C1755573152399%7C2%7C1%7Cv.clarity.ms%2Fcollect",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1755659552,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "dev_camp",
+      "value": "aDhEcHpMV1h6SWxWZjNXWTYyMll3dz09",
+      "domain": ".db.accesstrade.co.id",
+      "path": "/",
+      "expires": 1758165153.57669,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "_ga_H6YQ1B6K6X",
+      "value": "GS2.1.s1755573151$o1$g0$t1755573153$j58$l0$h0",
+      "domain": ".accesstrade.co.id",
+      "path": "/",
+      "expires": 1790133153.586543,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "https://db.accesstrade.co.id",
+      "localStorage": [
+        {
+          "name": "b24_crm_guest_ref",
+          "value": "{\"ts\":1755573151,\"ref\":\"https://accesstrade.co.id/publisher/login\",\"cacheData\":{\"time\":1755573151,\"ttl\":2419200}}"
+        },
+        {
+          "name": "b24_crm_guest_utm",
+          "value": "{\"ts\":1755573151,\"list\":{},\"gclid\":null}"
+        },
+        {
+          "name": "b24_crm_guest_pages",
+          "value": "[[\"https://db.accesstrade.co.id/\",1755573152,\"\"],[\"https://db.accesstrade.co.id/tiktok-shop\",1755573154,\"\"]]"
+        },
+        {
+          "name": "bx-vuex-65869c2667ee6ee187a181fac1a00840",
+          "value": "{\"common\":{\"configId\":0,\"configName\":\"\",\"location\":4,\"vote\":{\"enable\":false,\"beforeFinish\":true,\"messageText\":\"Please tell us how we did\",\"messageLike\":\"Thank you!\",\"messageDislike\":\"We are sorry we could not help you. Your opinion will help us improve our service.\"},\"textMessages\":{\"bxLivechatOnlineLine1\":\"We are online\",\"bxLivechatOnlineLine2\":\"and ready to help!\",\"bxLivechatOffline\":\"One of our representatives will get back to you shortly!\",\"bxLivechatTitle\":\"\"},\"online\":false,\"operators\":[],\"connectors\":[],\"reopen\":false,\"textareaHeight\":0,\"widgetHeight\":0,\"widgetWidth\":0,\"consentUrl\":\"\",\"dialogStart\":false,\"watchTyping\":false,\"showSessionId\":false,\"isCreateSessionMode\":false,\"crmFormsSettings\":{\"useWelcomeForm\":false,\"welcomeFormId\":0,\"welcomeFormSec\":\"\",\"welcomeFormDelay\":false,\"welcomeFormFilled\":false,\"successText\":\"\",\"errorText\":\"\"}},\"dialog\":{\"sessionId\":0,\"sessionClose\":true,\"sessionStatus\":0,\"userVote\":\"none\",\"closeVote\":false,\"userConsent\":false,\"operatorChatId\":0,\"operator\":{\"id\":0,\"name\":\"\",\"firstName\":\"\",\"lastName\":\"\",\"workPosition\":\"\",\"avatar\":\"\",\"online\":false}},\"user\":{\"id\":-1,\"hash\":\"\",\"name\":\"\",\"firstName\":\"\",\"lastName\":\"\",\"avatar\":\"\",\"email\":\"\",\"phone\":\"\",\"www\":\"\",\"gender\":\"M\",\"position\":\"\"}}"
+        },
+        {
+          "name": "direct",
+          "value": "https://db.accesstrade.co.id/tiktok-shop"
+        }
+      ]
+    },
+    {
+      "origin": "https://accesstrade.co.id",
+      "localStorage": [
+        {
+          "name": "lastExternalReferrer",
+          "value": "empty"
+        },
+        {
+          "name": "checkbox",
+          "value": ""
+        },
+        {
+          "name": "_gcl_ls",
+          "value": "{\"schema\":\"gcl\",\"version\":1,\"gcl_ctr\":{\"value\":{\"value\":0,\"creationTimeMs\":1755573148661},\"expires\":1763349148661}}"
+        },
+        {
+          "name": "lastExternalReferrerTime",
+          "value": "1755573149148"
+        },
+        {
+          "name": "username",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}
