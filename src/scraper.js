@@ -64,7 +64,7 @@ async function resetContextWithLoginState(newContext) {
 
 // ------------ Network optimizations ------------
 async function applyNetworkBlocking(page) {
-  // Abort heavy; kita hanya perlu DOM & URL img (tanpa payload).
+  // Abort heavy resources; kita hanya perlu DOM & URL gambar (tanpa payload).
   await page.route('**/*', (route) => {
     const type = route.request().resourceType();
     if (['image', 'font', 'media'].includes(type)) return route.abort();
@@ -147,7 +147,6 @@ function parseSold(str) {
   return allNums.length ? Math.max(...allNums) : 0;
 }
 function normFlat(s) { return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, ''); }
-function norm(s){ return (s||'').toLowerCase().replace(/\s+/g,' ').trim(); }
 
 // ------------ Matching & Scoring ------------
 function extractModelToken(q) {
@@ -241,19 +240,6 @@ async function waitCardsAppear(p, selector, min = 4, timeout = 25000) {
   return false;
 }
 
-// NEW: tunggu jumlah kartu stabil sebentar (mengurangi retry sia-sia)
-async function waitStableCount(page, gridSelector, ms = 800) {
-  const cards = page.locator(`${gridSelector} .col`);
-  let last = await cards.count().catch(()=>0);
-  let t0 = Date.now();
-  while (Date.now() - t0 < ms) {
-    await page.waitForTimeout(150);
-    const now = await cards.count().catch(()=>0);
-    if (now !== last) { last = now; t0 = Date.now(); }
-  }
-  return last;
-}
-
 // ------------ Submit form (lebih cepat & tegas) ------------
 async function submitSearchForm(page, gridSelector) {
   const form = page.locator('form').filter({ has: page.locator('#src') });
@@ -264,14 +250,14 @@ async function submitSearchForm(page, gridSelector) {
   // Prioritas: requestSubmit
   await form.evaluate(f => f.requestSubmit()).catch(() => {});
   await Promise.race([
-    waitGridChanged(page, gridSelector, beforeHtml, 8000), // dipangkas dari 12s
-    page.waitForTimeout(600),
+    waitGridChanged(page, gridSelector, beforeHtml, 12000),
+    page.waitForTimeout(800),
   ]);
 
+  // Jika belum berubah, coba Enter
   const after1 = await page.locator(gridSelector).innerHTML().catch(() => '');
   if (beforeHtml && after1 && after1 !== beforeHtml) return;
 
-  // Enter fallback
   if (await page.locator('#max_price').count()) {
     await page.focus('#max_price').catch(() => {});
     await page.keyboard.press('Enter').catch(() => {});
@@ -280,29 +266,32 @@ async function submitSearchForm(page, gridSelector) {
     await page.keyboard.press('Enter').catch(() => {});
   }
   await Promise.race([
-    waitGridChanged(page, gridSelector, beforeHtml, 8000),
-    page.waitForTimeout(700),
+    waitGridChanged(page, gridSelector, beforeHtml, 12000),
+    page.waitForTimeout(900),
   ]);
 
+  // Jika tetap belum, klik tombol submit visible
   const after2 = await page.locator(gridSelector).innerHTML().catch(() => '');
   if (beforeHtml && after2 && after2 !== beforeHtml) return;
 
   const visibleBtn = form.locator('button[type="submit"]:visible');
   if (await visibleBtn.count()) {
     await visibleBtn.first().scrollIntoViewIfNeeded().catch(() => {});
-    await visibleBtn.first().click({ timeout: 4000 }).catch(() => {});
+    await visibleBtn.first().click({ timeout: 5000 }).catch(() => {});
     await Promise.race([
-      waitGridChanged(page, gridSelector, beforeHtml, 8000),
-      page.waitForTimeout(700),
+      waitGridChanged(page, gridSelector, beforeHtml, 12000),
+      page.waitForTimeout(900),
     ]);
   }
 }
 
-// ------------ Modal affiliate link (dipangkas & dipertegas) ------------
+// ------------ Modal affiliate link ------------
 async function getAffiliateLinkForCard(page, cardLocator) {
+  // Pastikan kartu terlihat & hover (beberapa UI baru menampilkan tombol saat hover)
   await cardLocator.scrollIntoViewIfNeeded().catch(() => {});
   await cardLocator.hover().catch(() => {});
 
+  // Tombol “GET LINK” bisa tersembunyi sebelum hover
   const getLinkBtn = cardLocator.locator('button:has-text("GET LINK")');
   if (!(await getLinkBtn.count())) return null;
 
@@ -310,9 +299,7 @@ async function getAffiliateLinkForCard(page, cardLocator) {
 
   const genSel = '#generate_link_at';
   const showSel = '#show_link_at';
-
-  // timeouts lebih tegas
-  await page.waitForSelector(`${genSel}, ${showSel}`, { timeout: 7000 }).catch(() => {});
+  await page.waitForSelector(`${genSel}, ${showSel}`, { timeout: 12000 }).catch(() => {});
 
   const genVisible = await page.locator(`${genSel}:not(.d-none)`).count();
   if (genVisible) {
@@ -325,24 +312,31 @@ async function getAffiliateLinkForCard(page, cardLocator) {
     if (await genBtn.count()) await genBtn.click().catch(() => {});
   }
 
-  await page.waitForSelector('#generate_link_at.d-none', { timeout: 4000 }).catch(() => {});
-  await page.waitForTimeout(400);
-  await page.waitForSelector('#show_link_at:not(.d-none)', { timeout: 7000 }).catch(() => {});
+  // Tambah waktu sedikit, beberapa campaign lambat mengisi field
+  await Promise.race([
+    page.waitForSelector('#generate_link_at.d-none', { timeout: 6000 }).catch(() => {}),
+    page.waitForTimeout(1200),
+  ]);
+  await page.waitForSelector('#show_link_at:not(.d-none)', { timeout: 10000 }).catch(() => {});
 
+  // --- Fallback multi-selector untuk field link ---
   const candidateSelectors = [
-    '#getAffiliateSosmed',
-    '#getAffiliateLink',
+    '#getAffiliateSosmed',    // bawaan sekarang
+    '#getAffiliateLink',      // kemungkinan varian lain
     'input[name="affiliate_link"]',
     'textarea[name="affiliate_link"]'
   ];
 
+  // Coba beberapa kali baca field
   let url = null;
-  for (let attempt = 0; attempt < 1 && !url; attempt++) { // 1x attempt cukup
+  for (let attempt = 0; attempt < 2 && !url; attempt++) {
     for (const sel of candidateSelectors) {
       try {
+        // Pastikan elemennya ada
         const has = await page.locator(sel).count();
         if (!has) continue;
 
+        // Tunggu terisi (maks 6s/selector per attempt)
         await page.waitForFunction(
           (selector) => {
             const el = document.querySelector(selector);
@@ -350,72 +344,36 @@ async function getAffiliateLinkForCard(page, cardLocator) {
             return !!(v && v.trim().length > 0);
           },
           sel,
-          { timeout: 5000 }
+          { timeout: 6000 }
         ).catch(() => {});
         const val = await page.locator(sel).inputValue().catch(async () => {
+          // fallback untuk textarea.innerText
           const txt = await page.locator(sel).textContent().catch(() => '');
           return txt || '';
         });
         if (val && /^https?:\/\//i.test(val)) { url = val; break; }
       } catch {}
     }
-    if (!url) await page.waitForTimeout(400);
+    if (!url) await page.waitForTimeout(600);
   }
 
   // Tutup modal
   const closeBtn = page.locator('button.btn-close.backToModal');
   if (await closeBtn.count()) {
     await closeBtn.first().click().catch(() => {});
-    await page.waitForSelector(candidateSelectors.join(','), { state: 'detached', timeout: 3000 }).catch(() => {});
+    await page.waitForSelector(candidateSelectors.join(','), { state: 'detached', timeout: 4000 }).catch(() => {});
   } else {
     await page.keyboard.press('Escape').catch(() => {});
   }
   if (!url) console.warn('[AFFILIATE] No link for:', await cardLocator.locator('.card-title').innerText().catch(()=>'?'));
 
   return url || null;
+  
 }
 
-// ------------ Cari kartu di helper: by title + price (anti-ketuker) ------------
-async function findCardByTitleAndPrice(page, gridSelector, targetTitle, targetPrice) {
-  const cards = page.locator(`${gridSelector} .col`);
-  const n = await cards.count();
-  const want = norm(targetTitle);
-
-  // 1) exact match judul (paling murah)
-  for (let i = 0; i < n; i++) {
-    const t = await cards.nth(i).locator('.card-title').innerText().catch(()=> '');
-    if (norm(t) === want) return cards.nth(i);
-  }
-
-  // 2) fuzzy + cek kedekatan harga
-  let bestI = -1, bestScore = -1;
-  for (let i = 0; i < n; i++) {
-    const t = await cards.nth(i).locator('.card-title').innerText().catch(()=> '');
-    const pStr = await cards.nth(i).locator('.newPrice').innerText().catch(()=> '');
-    const p = parseCurrencyToInt(pStr);
-
-    const sModel = scoreTitleModelMode(targetTitle, t);
-    const { match, ratio } = textSimGeneric(targetTitle, t);
-    let score = sModel*2 + match + ratio;
-
-    if (targetPrice && p) {
-      const diff = Math.abs(p - targetPrice) / Math.max(targetPrice, 1);
-      if (diff <= 0.05) score += 2;         // ±5% dianggap sama
-      else if (diff <= 0.10) score += 1;    // ±10% masih mirip
-    }
-
-    if (score > bestScore) { bestScore = score; bestI = i; }
-  }
-  return bestI >= 0 ? cards.nth(bestI) : null;
-}
 
 // ------------ Core scrape (with parallel affiliate) ------------
-export async function scrapeOnePageTop5({
-  product_name,
-  min_price = 0,
-  max_price = 0,
-  affiliateConcurrency = 5, // lebih cepat
-}) {
+export async function scrapeOnePageTop5({ product_name, min_price = 0, max_price = 0, affiliateConcurrency = 3 }) {
   if (!product_name || typeof product_name !== 'string') {
     throw new Error('product_name wajib diisi (string).');
   }
@@ -426,7 +384,6 @@ export async function scrapeOnePageTop5({
   const { browser, context } = await ensureLogin();
   const page = await context.newPage();
   await applyNetworkBlocking(page);
-  page.setDefaultTimeout(12000); // global yang wajar
 
   try {
     console.time(`[SCRAPE] ${product_name}`);
@@ -445,28 +402,23 @@ export async function scrapeOnePageTop5({
     await submitSearchForm(page, gridSelector);
 
     // ---- Robust wait + retry bila grid belum muncul ----
-    let ok = await waitCardsAppear(page, gridSelector, 4, 20000);
-    if (ok) {
-      await waitStableCount(page, gridSelector, 800); // stabilizer
-    } else {
+    let ok = await waitCardsAppear(page, gridSelector, 4, 25000);
+    if (!ok) {
       await page.dispatchEvent('#src', 'input').catch(() => {});
       await submitSearchForm(page, gridSelector);
-      ok = await waitCardsAppear(page, gridSelector, 4, 20000);
-      if (ok) await waitStableCount(page, gridSelector, 800);
+      ok = await waitCardsAppear(page, gridSelector, 4, 25000);
     }
-
     if (!ok) {
       try {
         await page.selectOption('#t_store_rating', { value: '0' }); // longgarkan filter
         await page.dispatchEvent('#t_store_rating', 'change').catch(() => {});
       } catch {}
       await submitSearchForm(page, gridSelector);
-      ok = await waitCardsAppear(page, gridSelector, 4, 20000);
-      if (ok) await waitStableCount(page, gridSelector, 800);
+      ok = await waitCardsAppear(page, gridSelector, 4, 25000);
     }
     if (!ok) throw new Error('Listing tidak muncul: kemungkinan halaman tidak merespons atau selector berubah.');
 
-    await page.waitForTimeout(250);
+    await page.waitForTimeout(300);
     const itemsLoc = page.locator(`${gridSelector} .col`);
     const itemHandles = await itemsLoc.elementHandles();
     console.log(`[SCRAPE] Items found on main page: ${itemHandles.length}`);
@@ -518,7 +470,7 @@ export async function scrapeOnePageTop5({
         if (!putWhere) continue;
 
         const row = {
-          idx: i, // index di halaman A (tetap disimpan untuk opsi serial)
+          idx: i,
           product_name: title,
           price,
           sold,
@@ -565,13 +517,12 @@ export async function scrapeOnePageTop5({
 
     const top = merged.slice(0, 5);
 
-    // 4) Ambil affiliate link secara paralel (helper pages) — anti ketuker
+    // 4) Ambil affiliate link secara paralel aman (multi-page)
     async function createSearchPage() {
       const p = await context.newPage();
       await applyNetworkBlocking(p);
-      p.setDefaultTimeout(8000); // helper biar gak kelamaan nunggu
       await p.goto(TTS_URL, { waitUntil: 'domcontentloaded', timeout: 20000 });
-      await p.waitForSelector('#src', { timeout: 10000 });
+      await p.waitForSelector('#src', { timeout: 15000 });
       await p.fill('#src', product_name);
       if (min_price && Number(min_price) > 0) await p.fill('#min_price', String(min_price)); else await p.fill('#min_price', '');
       if (max_price && Number(max_price) > 0) await p.fill('#max_price', String(max_price)); else await p.fill('#max_price', '');
@@ -579,17 +530,15 @@ export async function scrapeOnePageTop5({
       await p.dispatchEvent('#t_store_rating', 'change').catch(() => {});
 
       const gridSelector2 = '.gridCampaigns.campaign-list.tiktok-product';
-      await p.waitForSelector(gridSelector2, { timeout: 15000 }).catch(() => {});
+      await p.waitForSelector(gridSelector2, { timeout: 20000 }).catch(() => {});
       await submitSearchForm(p, gridSelector2);
 
-      let okH = await waitCardsAppear(p, gridSelector2, 4, 15000);
-      if (okH) {
-        await waitStableCount(p, gridSelector2, 700);
-      } else {
+      // Retry kuat agar helper page pasti punya listing
+      let okH = await waitCardsAppear(p, gridSelector2, 4, 25000);
+      if (!okH) {
         await p.dispatchEvent('#src', 'input').catch(() => {});
         await submitSearchForm(p, gridSelector2);
-        okH = await waitCardsAppear(p, gridSelector2, 4, 15000);
-        if (okH) await waitStableCount(p, gridSelector2, 700);
+        okH = await waitCardsAppear(p, gridSelector2, 4, 25000);
       }
       if (!okH) {
         try {
@@ -597,16 +546,15 @@ export async function scrapeOnePageTop5({
           await p.dispatchEvent('#t_store_rating', 'change').catch(() => {});
         } catch {}
         await submitSearchForm(p, gridSelector2);
-        okH = await waitCardsAppear(p, gridSelector2, 4, 15000);
-        if (okH) await waitStableCount(p, gridSelector2, 700);
+        okH = await waitCardsAppear(p, gridSelector2, 4, 25000);
       }
       if (!okH) throw new Error('Helper page gagal memuat listing untuk affiliate modal.');
 
-      await p.waitForTimeout(150);
+      await p.waitForTimeout(200);
       return { page: p, gridSelector: gridSelector2 };
     }
 
-    const concurrency = Math.max(1, Math.min(affiliateConcurrency || 5, top.length));
+    const concurrency = Math.max(1, Math.min(affiliateConcurrency || 3, top.length));
     const queue = top.map((item, i) => ({ ...item, qidx: i })); // copy
     const linkResults = new Array(top.length).fill(null);
 
@@ -616,11 +564,7 @@ export async function scrapeOnePageTop5({
         while (queue.length) {
           const item = queue.shift();
           if (!item) break;
-
-          // ANTI-KETUKER: cari kartu berdasarkan judul (+harga), bukan index
-          const card = await findCardByTitleAndPrice(wp, wgrid, item.product_name, item.price);
-          if (!card) { linkResults[item.qidx] = null; continue; }
-
+          const card = wp.locator(`${wgrid} .col`).nth(item.idx);
           const url = await getAffiliateLinkForCard(wp, card);
           linkResults[item.qidx] = url || null;
         }
@@ -645,6 +589,7 @@ export async function scrapeOnePageTop5({
     console.timeEnd(`[SCRAPE] ${product_name}`);
     return out;
   } finally {
+    // Tutup PAGE saja; browser & context tetap hidup untuk run berikutnya
     await safeClosePage(page);
   }
 }
